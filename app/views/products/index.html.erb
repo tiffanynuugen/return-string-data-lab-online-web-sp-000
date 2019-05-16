@@ -1,1 +1,37 @@
+<% @products.each do |product| %>
+  <%= render partial: "product", locals: {product: product} %>
+<% end %>
 
+<script type="text/javascript">
+const buttonList = document.querySelectorAll(".js-more").forEach(button => {
+  button.addEventListener('click', () => {
+    const dataId = event.target.dataset.id
+    const body = document.querySelector(`#body-${dataId}`)
+
+    fetch(`http://localhost:3000/products/${dataId}/description`)
+    .then(resp => resp.text())
+    .then(text => {
+      body.innerHTML = text
+    })
+    .then(() => {
+      fetch(`http://localhost:3000/products/${dataId}/inventory`)
+      .then(resp => resp.json())
+      .then(json => {
+        if (json) {
+          body.innerHTML += "<br><div><strong>Inventory</strong>: Available</div>"
+        } else {
+          body.innerHTML += "<br><div><strong>Inventory</strong>: Sold Out</div>"
+        }
+      })
+    })
+
+  })
+})
+
+// const body = document.querySelector("body")
+// body.addEventListener('click', (event) => {
+//   if (event.target.className === "js-more") {
+//     console.log(event.target);
+//   }
+// })
+</script>
